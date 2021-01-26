@@ -1,22 +1,9 @@
-const users = [
-	{
-		id: 1,
-		firstName: 'Chuck',
-		lastName: 'Norris',
-		status: 'ACTIVE',
-	},
-	{
-		id: 2,
-		firstName: 'John',
-		lastName: 'Rambo',
-		status: 'DELETED',
-	},
-];
+const users = require('../../data/users');
 
 module.exports = {
 	Query: {
 		user: (_parent, args) => users.find((user) => user.id == args.id),
-		userList: () => users,
+		userList: () => ({ rows: users, totalRows: users.length }),
 	},
 
 	Mutation: {

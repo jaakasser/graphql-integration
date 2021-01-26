@@ -10,9 +10,14 @@ type User {
   status: UserStatus
 }
 
+type UserListResult {
+  rows: [User]!
+  totalRows: Int
+}
+
 type Query {
   user(id: ID!): User
-  userList: [User]
+  userList: UserListResult!
 }
 
 type Mutation {
