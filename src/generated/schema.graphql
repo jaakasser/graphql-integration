@@ -1,0 +1,25 @@
+enum UserStatus {
+  ACTIVE
+  DELETED
+}
+
+type User {
+  id: ID!
+  firstName: String
+  lastName: String
+  status: UserStatus
+}
+
+type Query {
+  user(id: ID!): User
+  userList: [User]
+}
+
+type Mutation {
+  updateUserStatus(id: ID!, status: UserStatus!): User
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
