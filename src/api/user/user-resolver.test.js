@@ -15,8 +15,8 @@ const getUser = gql`
 `;
 
 const getUserList = gql`
-	query Users {
-		userList {
+	query Users($skip: Int!, $take: Int!, $filter: UserListFilter) {
+		userList(skip: $skip, take: $take, filter: $filter) {
 			rows {
 				id
 				firstName
@@ -51,10 +51,31 @@ test('Get user with id 1', async () => {
 });
 
 test('Get all users', async () => {
-	const res = await client.query({ query: getUserList });
+	const res = await client.query({ query: getUserList, variables: { skip: 0, take: 10, filter: {} } });
 
 	expect(res.data.userList.rows).toEqual(users);
 	expect(res.data.userList.totalRows).toEqual(users.length);
+});
+
+test('Get all active users', async () => {
+	const res = await client.query({
+		query: getUserList,
+		variables: { skip: 0, take: 10, filter: { status: 'ACTIVE' } },
+	});
+
+	const activeUsers = users.filter((u) => u.status === 'ACTIVE');
+
+	expect(res.data.userList.rows).toEqual(activeUsers);
+	expect(res.data.userList.totalRows).toEqual(activeUsers.length);
+});
+
+test('Skip first user', async () => {
+	const res = await client.query({ query: getUserList, variables: { skip: 1, take: 10, filter: {} } });
+
+	const expectedResult = users.slice(1, 10);
+
+	expect(res.data.userList.rows).toEqual(expectedResult);
+	expect(res.data.userList.totalRows).toEqual(expectedResult.length);
 });
 
 test('Update user status', async () => {

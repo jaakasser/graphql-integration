@@ -15,9 +15,13 @@ type UserListResult {
 	totalRows: Int
 }
 
+input UserListFilter {
+	status: UserStatus
+}
+
 type Query {
 	user(id: ID!): User
-	userList: UserListResult!
+	userList(skip: Int!, take: Int!, filter: UserListFilter): UserListResult!
 }
 
 type Mutation {
